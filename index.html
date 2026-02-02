@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dijagnostički kviz</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="container" id="test">
+  <h1>Dijagnostički kviz</h1>
+  <p class="subtitle">Kviz za procjenu vještina učenja vašeg djeteta</p>
+  
+  <div id="questions"></div>
+
+  <!-- EMAIL I CONSENT -->
+  <input type="email" id="email" placeholder="Upišite e-mail adresu" required />
+
+  <label class="consent">
+    <input type="checkbox" id="consent" />
+    Slažem se s obradom podataka u informativne i marketinške svrhe.
+  </label>
+
+  <button onclick="calculate()">Prikaži rezultat</button>
+</div>
+
+<div class="container hidden" id="result">
+  <h2>Rezultat</h2>
+  <div id="resultContent"></div>
+  
+  <div class="cta-box">
+    <p>
+      Logos učiteljica radi po jedinstvenom programu koji se temelji na četiri segmenta
+      koja su važna za postizanje školskog uspjeha: koncentraciji, organizaciji,
+      motivaciji te svladavanju tehnika učenja.
+    </p>
+    <a href="https://www.logosuciteljica.hr/personalizirani-paketi/" target="_blank" class="cta-button">
+      POGLEDAJTE NAŠE PAKETE
+    </a>
+  </div>
+
+  <button onclick="restart()">Ponovno ispuni test</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
