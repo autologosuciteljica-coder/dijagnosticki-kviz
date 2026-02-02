@@ -2,12 +2,20 @@ const crypto = require("crypto");
 const https = require("https");
 
 exports.handler = async (event) => {
+  console.log("Function called!");
+  console.log("Event body:", event.body);
+  
   try {
     const body = JSON.parse(event.body);
+    console.log("Parsed body:", body);
 
     const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
     const privateKey = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n");
     const sheetId = process.env.SHEET_ID;
+
+    console.log("Client email:", clientEmail);
+    console.log("Sheet ID:", sheetId);
+    console.log("Private key exists:", !!privateKey);
 
     // JWT header + claim
     const header = Buffer.from(JSON.stringify({
@@ -31,18 +39,27 @@ exports.handler = async (event) => {
 
     const jwt = `${header}.${claim}.${signature}`;
 
+    console.log("JWT created successfully");
+
     // Get access token
-    const token = await fetch("https://oauth2.googleapis.com/token", {
+    const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
         grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
         assertion: jwt
       })
-    }).then(res => res.json());
+    });
+
+    const token = await tokenResponse.json();
+    console.log("Token response:", token);
+
+    if (!token.access_token) {
+      throw new Error("Failed to get access token: " + JSON.stringify(token));
+    }
 
     // Append to sheet
-    await fetch(
+    const sheetResponse = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/A:I:append?valueInputOption=USER_ENTERED`,
       {
         method: "POST",
@@ -66,12 +83,17 @@ exports.handler = async (event) => {
       }
     );
 
+    const sheetResult = await sheetResponse.json();
+    console.log("Sheet response:", sheetResult);
+
     return {
       statusCode: 200,
       body: JSON.stringify({ success: true })
     };
 
   } catch (err) {
+    console.error("ERROR:", err.message);
+    console.error("Full error:", err);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: err.message })
