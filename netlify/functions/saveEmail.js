@@ -43,7 +43,7 @@ exports.handler = async (event) => {
 
     // Append to sheet
     await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/A:H:append?valueInputOption=USER_ENTERED`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/A:I:append?valueInputOption=USER_ENTERED`,
       {
         method: "POST",
         headers: {
